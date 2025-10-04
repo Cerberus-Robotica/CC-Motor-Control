@@ -55,7 +55,7 @@ void gpio_isr() {
 void loop() {
   static unsigned long lastTime = 0;
   static unsigned long lastRead = 0;
-  static float filteredTime = 0, RPM = 0;
+  static float filteredTime = 0, RPM = 0, angularVelocity = 0;
   unsigned long now = micros();
   uint8_t stateAB = (stateA << 1) | stateB;
   static uint8_t lastAB = 0;
@@ -69,7 +69,7 @@ void loop() {
       float alpha = (float)rawTime / (tau + (float)rawTime);
       filteredTime = (1.0 - alpha) * filteredTime + alpha * rawTime;  // sem multiplicar por dir
       RPM = (60.0e6) * (float)dir / (filteredTime * PPR);
-      angular_velocity_real_time = (2.0 * PI * 1e6 * (float)dir) / (filteredTime * PPR);
+      angularVelocity = (2.0 * PI * 1e6 * (float)dir) / (filteredTime * PPR);
       lastTime = lastRead = now;
     }
 
